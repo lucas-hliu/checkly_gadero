@@ -2,6 +2,7 @@ import { Page, Response, expect } from '@playwright/test';
 import { AbstractPage } from './abstractPage'
 import { CartOverviewPage } from './cartOverviewPage';
 import { IResponseListener } from './responseListener';
+import { websitSettings } from './websiteSettings';
 
 export enum ProductCheckType {
     checkInOrderFlow = 0,
@@ -10,8 +11,8 @@ export enum ProductCheckType {
 }
 
 export class ProductDetailsPage extends AbstractPage implements IResponseListener {
-    private static readonly addToCartButtonName: string = "In winkelwagen";
-    private static readonly gotoCartButtonName: string = "Ga naar winkelwagen";
+    private static readonly addToCartButtonName: string = websitSettings.productDetailPage.addToCartButtonName;
+    private static readonly gotoCartButtonName: string = websitSettings.productDetailPage.gotoCartButtonName;
     private slug: string;
     private checkType: ProductCheckType;
     private relatedProducts: any;
@@ -41,9 +42,7 @@ export class ProductDetailsPage extends AbstractPage implements IResponseListene
 
     public async specCheck(): Promise<void> {
         if (this.checkType == ProductCheckType.checkInOrderFlow) {
-            // click the button to accept cookie TODO: better solution?
-            await expect(this.page.getByRole('button', { name: 'Alles accepteren' })).toBeVisible();
-            await this.page.getByRole('button', { name: 'Alles accepteren' }).click();
+            await this.cookiesAccept();
         }
 
         switch (this.checkType) {

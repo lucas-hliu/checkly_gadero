@@ -1,4 +1,9 @@
 {
+  "name": "@gadero/checkly_test",
+  "version": "1.0.0",
+  "description": "Gadero end to end checkly tests",
+  "main": "index.js",
+
   "devDependencies": {
     "@playwright/test": "^1.39.0",
     "@types/node": "^20.9.0",
@@ -6,11 +11,9 @@
     "dotenv": "^16.3.1"
   },
   "scripts": {
-    "playwright.init": "npm init playwright@latest --yes -- --quiet --browser=chromium",
     "playwright.open": "npx playwright open",
     "playwright.test": "npx playwright test",
     "playwright.report": "npx playwright show-report",
-    "playwright.update": "npm install -D @playwright/test@latest",
     "checkly.test": "npx checkly test --env-file='./.env'",
     "checkly.deploy": "npx checkly deploy"
   }
