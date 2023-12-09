@@ -14,12 +14,13 @@ export enum CustomerType {
 }
 
 export class CustomerDetailsPage extends AbstractPage {
-    private static readonly corporateInputFields: string[] = ["#companyName", "#kvkNumber", "#vatNumber", "#firstName", "#lastName", "#email", "#phone", "#comments"];
-    private static readonly individualInputFields: string[] = ["#firstName", "#lastName", "#email", "#phone", "#comments"];
-    private static readonly corporateInputValues: string[] = ["rb2", "kvk123", "DE9876543210", "jennifer", "chen", "jennifer@rb2.nl", "14598768572", "test"];
-    private static readonly individualInputValues: string[] = ["jennifer", "chen", "jennifer@rb2.nl", "14598768572", "test"];
-    private static readonly switchRatios: string[] = ["Particulier", "Bedrijf"];
-    private static readonly gotoPaymentPageButtonName: string = "Ga naar stap 2: Betaling";
+    private static readonly corporateInputFields: string[] = websitSettings.customerDetailsPage.corporateInputFields;
+    private static readonly individualInputFields: string[] = websitSettings.customerDetailsPage.individualInputFields;
+    private static readonly corporateInputValues: string[] = websitSettings.customerDetailsPage.corporateInputValues;
+    private static readonly individualInputValues: string[] = websitSettings.customerDetailsPage.individualInputValues;
+    private static readonly switchRatios: string[] = websitSettings.customerDetailsPage.switchRatios;
+    private static readonly gotoPaymentPageButtonName: string = websitSettings.customerDetailsPage.gotoPaymentPageButtonName;
+    private static readonly checkBoxAcceptanceLab:string = websitSettings.customerDetailsPage.checkBoxAcceptanceLab;
     private customerType: CustomerType;
     private checkType: CustomerCheckType;
     public constructor(page: Page, checkType: CustomerCheckType = CustomerCheckType.checkInOrderFlow, customerType: CustomerType = CustomerType.individualCustomer) {
@@ -41,7 +42,7 @@ export class CustomerDetailsPage extends AbstractPage {
         }
         if (this.checkType == CustomerCheckType.checkInOrderFlow) {
             // submit customer information and goto payment page
-            await this.page.getByLabel('Ik heb de algemene voorwaarden gelezen en ik ga hiermee akkoord. Eveneens heb ik mijn gegevens gecontroleerd').click();
+            await this.page.getByLabel( CustomerDetailsPage.checkBoxAcceptanceLab).click();
             await this.page.getByRole('button', { name: CustomerDetailsPage.gotoPaymentPageButtonName }).click();
             // check the Url contains the ${paymentPagePath}
             await new PaymentPage(this.page).basicCheck();

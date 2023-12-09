@@ -3,5 +3,5 @@ import { test } from '@playwright/test';
 import { CheckHelper } from '../pages/checkHelper';
 
 test('product-count-on-productLister-check', async ({ page }) => {
-  await CheckHelper.CheckProductCount(page);
+  await CheckHelper.checkProductCount(page);
 });

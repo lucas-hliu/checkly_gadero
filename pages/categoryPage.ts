@@ -6,7 +6,8 @@ import { ProductCheckType } from './productDetailPage';
 import { ProductListerCheckType, ProductListerPage } from './productListerPage';
 
 export class CategoryPage extends AbstractPage implements IResponseListener {
-    private nextResponseListener: IResponseListener;
+    private static readonly categoryCardPattern: string  = websitSettings.categoryPage.categoryCardPattern;
+    private nextResponseListener?: IResponseListener;
     public constructor(page: Page) {
         super(page, websitSettings.categoryPage.path);
     }
@@ -14,14 +15,16 @@ export class CategoryPage extends AbstractPage implements IResponseListener {
         await this.nextResponseListener?.onResponse(response);
     }
     public async specCheck(): Promise<void> {
-        // goto product lister page
-        const categoryCard = this.page.getByRole('link', { name: new RegExp(`Blokhut circa 3x2 meter.*`, "i") });
-        await expect(categoryCard).toBeVisible();
-        await categoryCard.click();
-
         const productListerPage = new ProductListerPage(this.page, ProductCheckType.checkInOrderFlow, ProductListerCheckType.checkProductCount);
         this.nextResponseListener = productListerPage;
-        await productListerPage.check();
+        // goto product lister page
+        const categoryCard = this.page.getByRole('link', { name: new RegExp(CategoryPage.categoryCardPattern, "i") });
+        await expect(categoryCard).toBeVisible();
+        // in PROD, need to accept cookies when entering category page in the first time
+        if (process.env.ENV as string == "PROD")
+            await this.cookiesAccept();
+        await categoryCard.click();
 
+        await productListerPage.check();
     }
 }
