@@ -14,7 +14,9 @@ export class websitePwdPage {
     }
 
     private static checkNeedLogin() {
-        //TODO: return true if the websit is protected? find solution 
-        return true;
+        // return true if the websit is protected
+        if (process.env.ENV as string == "DEV") 
+            return true;
+        return false;
     }
 }

@@ -33,9 +33,9 @@ interface PayMentCheckOptions {
 
 export class CheckHelper {
 
-    public static async CheckIndividualCustomerOrderFailedFlow(page: Page) {
+    public static async checkIndividualCustomerOrderFailedFlow(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             customerType: CustomerType.individualCustomer,
             payStatus: PayStatus.cancel
         };
@@ -44,32 +44,32 @@ export class CheckHelper {
 
     public static async checkCorporateCustomerOrderFailedFlow(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             customerType: CustomerType.corporateCustomer,
             payStatus: PayStatus.cancel
         };
         await CheckHelper.customerOrderFlowCheck(page, options);
     }
 
-    public static async CheckIndividualCustomerOrderSuccessFlow(page: Page) {
+    public static async checkIndividualCustomerOrderSuccessFlow(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             customerType: CustomerType.individualCustomer,
             payStatus: PayStatus.payed
         };
         await CheckHelper.customerOrderFlowCheck(page, options);
     }
 
-    public static async CheckCorporateCustomerOrderSuccessFlow(page: Page) {
+    public static async checkCorporateCustomerOrderSuccessFlow(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             customerType: CustomerType.corporateCustomer,
             payStatus: PayStatus.payed
         };
         await CheckHelper.customerOrderFlowCheck(page, options);
     }
 
-    public static async CheckProductCount(page: Page) {
+    public static async checkProductCount(page: Page) {
         await websitePwdPage.LoginIfNeed(page);
         const categoryPage = new CategoryPage(page);
         //set the listener to receive response data
@@ -80,25 +80,25 @@ export class CheckHelper {
         await categoryPage.gotoPageAndCheck();
       }
 
-    public static async CheckRelatedProducts(page: Page) {
+    public static async checkRelatedProducts(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: ProductCheckType.checkRelatedProducts
         };
         await CheckHelper.productCheck(page, options);
     }
 
-    public static async CheckExtraOptions(page: Page) {
+    public static async checkExtraOptions(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: ProductCheckType.checkExtraOptions
         };
         await CheckHelper.productCheck(page, options);
     }
 
-    public static async CheckIndividualCustomerDetailsFilled(page: Page) {
+    public static async checkIndividualCustomerDetailsFilled(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: CustomerCheckType.checkInputBox,
             customerType: CustomerType.individualCustomer
         }
@@ -106,9 +106,9 @@ export class CheckHelper {
         await CheckHelper.customerCheck(page, options);
     }
 
-    public static async CheckCorporateCustomerDetailsFilled(page: Page) {
+    public static async checkCorporateCustomerDetailsFilled(page: Page) {
         const options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: CustomerCheckType.checkInputBox,
             customerType: CustomerType.corporateCustomer
         }
@@ -116,27 +116,27 @@ export class CheckHelper {
         await CheckHelper.customerCheck(page, options);
     }
 
-    public static async CheckAllPaymentMethodsVisiable(page: Page) {
+    public static async checkAllPaymentMethodsVisiable(page: Page) {
         let options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: PaymentCheckType.checkPayMentMethods,
         }
 
         await this.paymentCheck(page, options);
     }
 
-    public static async CheckPayByLinkPaymentMethodVisibleAndOrder(page: Page) {
+    public static async checkPayByLinkPaymentMethodVisibleAndOrder(page: Page) {
         let options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: PaymentCheckType.checkPayBylink,
         }
 
         await this.paymentCheck(page, options);
     }
 
-    public static async CheckPINpaymentMethodVisable(page: Page) {
+    public static async checkPINpaymentMethodVisable(page: Page) {
         let options = {
-            productSlug: websitSettings.productslug,
+            productSlug: websitSettings.productSlug,
             checkType: PaymentCheckType.checkPIN,
         }
 

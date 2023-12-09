@@ -13,13 +13,11 @@ export class OrderSuccessPage extends AbstractPage {
         super(page, websitSettings.orderSuccessPage.path);
     }
     public async specCheck(): Promise<void> {
-        //nothing todo ...
-        //Todo: check the H1 title ?
     }
 }
 
 export class OrderFailedPage extends AbstractPage {
-    private static readonly gotoPaymentPageButtonLab: string = "Betaal je bestelling";
+    private static readonly gotoPaymentPageButtonLab: string = websitSettings.orderFailedPage.gotoPaymentPageButtonLab;
     public constructor(page: Page) {
         super(page, websitSettings.orderFailedPage.path);
     }
@@ -35,13 +33,18 @@ export class OrderFailedPage extends AbstractPage {
 //third party pay page
 export class PayControllerPage extends AbstractPage {
     private static readonly tokenInputID: string = "#token-input";
-    private static readonly token: string = "0adbb20eb47603b8b6d19f603faa29cad7592452";
+    private static readonly token: string = websitSettings.paymentToken;
     private static readonly optionPayedID: string = "#formSubmit1";
     private static readonly optionCancelID: string = "#formSubmit4";
 
     private payStatus: PayStatus;
     public constructor(page: Page, status: PayStatus) {
-        super(page, websitSettings.payControllerPage.path);
+        if (process.env.ENV as string == "PROD") {
+            super(page, websitSettings.payControllerPage.prodPath);
+        }
+        else {
+            super(page, websitSettings.payControllerPage.path);
+        }
         this.payStatus = status;
     }
     public async specCheck(): Promise<void> {

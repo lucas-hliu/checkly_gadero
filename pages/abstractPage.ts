@@ -19,7 +19,7 @@ export abstract class AbstractPage {
     public async gotoPage() {
         // goto page
         const uri = websitSettings.baseUrl + this.path;
-        console.log(`goto ${uri}`);
+       // console.log(`goto ${uri}`);
         const response = await this.page.goto(uri, {waitUntil: "domcontentloaded"});
         console.log("goto " + uri + " status:" + response?.status());
         expect(response?.status()).toEqual(200);
@@ -40,6 +40,13 @@ export abstract class AbstractPage {
             const regexp = new RegExp(".*" + this.path, "i");
             await expect(this.page).toHaveURL(regexp);
         }
+    }
+    // accept the cookices
+    public async cookiesAccept() {
+        const cookies = this.page.getByRole('button', { name: websitSettings.cookiesAcceptButtonName, exact: true});
+        await expect(cookies).toBeVisible();
+        // click the button to accept cookies
+        await cookies.click();
     }
 
     // implement this method in inherited classes

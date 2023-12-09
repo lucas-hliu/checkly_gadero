@@ -12,7 +12,13 @@ export enum PaymentCheckType {
 }
 
 export class PaymentPage extends AbstractPage implements IResponseListener {
-    private static readonly gotoPayPageButtonName: string = "Betaal je bestelling";
+    private static readonly gotoPayPageButtonName: string = websitSettings.paymentPage.gotoPayPageButtonName;
+    private static readonly applePayName: string = websitSettings.paymentPage.applePayName;
+    private static readonly payByLinkName: string = websitSettings.paymentPage.payByLinkName;
+    private static readonly pinPayName: string = websitSettings.paymentPage.pinPayName;
+    private static readonly freeLab: string = websitSettings.paymentPage.freeLab;
+    
+    
     private paymentMethods: any;
     private payStatus: PayStatus;
     private checkType: PaymentCheckType;
@@ -24,7 +30,7 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
 
     async onResponse(response: Response): Promise<void> {
         //https://gadero.vercel.app/checkout/customer-details/?_data=routes%2F__layout%2Fcheckout
-        //TODO: filter the response to get payment method data. find better solution?
+        // filter the response to get payment method data
         const resourceType = response.request().resourceType();
         const url = response.url();
         if (resourceType == "fetch" && url.endsWith("checkout")) {
@@ -40,7 +46,7 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
             await this.checkPayMentMethods();
         } else if (this.checkType == PaymentCheckType.checkInOrderFlow) {
             // select Apple Pay payment
-            let applePay = this.page.getByRole('radio', { name: "Apple Pay" });
+            let applePay = this.page.getByRole('radio', { name: PaymentPage.applePayName });
             await expect(applePay).toBeVisible();
             await applePay.click();
             //click the button to goto pay page
@@ -50,7 +56,11 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
             await expect(button).toBeHidden();
             // do check in pay page
             let payPage = new PayControllerPage(this.page, this.payStatus);
-            await payPage.specCheck();
+            if (process.env.ENV as string == "PROD") {
+                await payPage.basicCheck();
+            } else {
+                await payPage.specCheck();
+            }
         } else if (this.checkType == PaymentCheckType.checkPayBylink) {
             await this.checkPayByLink();
         } else if (this.checkType == PaymentCheckType.checkPIN) {
@@ -71,7 +81,7 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
                 lab = `${paymentMethod.name} ${paymentMethod.price?.value},-`;
             }
             else {
-                lab = `${paymentMethod.name} gratis`;
+                lab = `${paymentMethod.name} ${PaymentPage.freeLab}`;
             }
             // only check the payment name with RegExp
             // lab = new RegExp(`${paymentMethod.name}.*`, "i");
@@ -82,7 +92,7 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
     }
 
     private async checkPayByLink() {
-        let payByLink = this.page.getByRole('radio', { name: "Pay by Link" });
+        let payByLink = this.page.getByRole('radio', { name: PaymentPage.payByLinkName });
         await expect(payByLink).toBeVisible();
         await payByLink.click();
 
@@ -97,8 +107,8 @@ export class PaymentPage extends AbstractPage implements IResponseListener {
     }
 
     private async checkPIN() {
-        let payByLink = this.page.getByRole('radio', { name: "PIN" });
-        await expect(payByLink).toBeVisible();
+        let pin = this.page.getByRole('radio', { name: PaymentPage.pinPayName });
+        await expect(pin).toBeVisible();
     }
 }
 
